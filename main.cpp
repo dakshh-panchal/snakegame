@@ -1,7 +1,8 @@
 #include <iostream>
-#include <raylib.h>
+#include "raylib.h"
 #include <deque>
-#include <raymath.h>
+#define RAYMATH_IMPLEMENTATION
+#include "raymath.h"
 
 using namespace std;
 
@@ -63,8 +64,7 @@ public:
 
 int main()
 {
-    //VEDANT BHAIYA SE PUCHO
-    SetRandomSeed(static_cast<unsigned int>(time(nullptr)));
+    SetRandomSeed(time(nullptr));
 
     Food food;
     Snake snake;
@@ -75,10 +75,20 @@ int main()
     
     while(!WindowShouldClose())
     {
+
+		Rectangle head = {snake.body[0].x * cellsize, snake.body[0].y * cellsize, (float)cellsize, (float)cellsize};
+		Rectangle f = {food.position.x * cellsize, food.position.y * cellsize,(float)cellsize, (float)cellsize};
+		bool col = CheckCollisionRecs(f , head);
+
+
+		if (col){
+			food.position = food.RandomPosi();
+		}
         BeginDrawing();
         ClearBackground(green);
         food.Draw();
         snake.Draw();
+
 
         if(IsKeyDown(KEY_UP) && snake.direction.y != 1) snake.direction = {0,-1};
 
